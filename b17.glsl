@@ -211,6 +211,12 @@ void main(void){
 
   vec4 text= texture2D(iText, uv);
 
-  out_Color= vt2;
+  c3.rgb=c3.bgr;
+
+  vec4 vt1=colorRemoval(c3, v1, 0.5, 1, 1,0.0,0.0);
+
+  vec4 vt3=colorRemoval(vt1, v1, 0.2, 1, 0.0,0.1,0.8);
+
+  out_Color=vt3;
 
 }
