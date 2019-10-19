@@ -65,13 +65,13 @@
 
 (trg :tb303sn
      tb303
-     :in-trg (map (fn [x] (map-in x scl 0.1)) (rep 4  [r 1 1 [1 1]]
+     :in-trg (map (fn [x] (map-in x scl 0.1)) (rep 4  [r 1 2 [1 12]]
                                                   [r]
-                                                  [r  [1 1] 1 r]
+                                                  [r  [1 1] 12 r]
                                                   [r]
-                                                  (fst 2 [r [1 1] 1 [1 1]])
+                                                  (fst 2 [r [1 2] 1 [1 12]])
                                                   [r]
-                                                  [[1 1] [r 1] r [r 1]]))
+                                                  [[1 1] [r 1] r [r 12]]))
      :in-amp [1]
      :in-note  (rep 1  (fll 32 ["n c2" "n c3" "n d1"]) )
      [r]
@@ -145,7 +145,7 @@
 
 
 (trg :uhsmp smp
-     :in-trg [1] [r]
+     :in-trg; [1] [r] [r]
                                         ;[1 r 1  [(rep 7 1) r (rep 7 1) r]]
      (rep 3 [1 r 1 r])
      ;[1 r 1 [1 1 1 1] 1 r 1 1 1 1 (acc [(rep 8 1)]) 1 1 1 1 [1 1 1 1]]
@@ -157,12 +157,7 @@
      :in-step (fst 1 [(range 1.25 2.75 0.25)])
      )
 
-(trg! :uhsmp :ksmpd trg-fx-distortion2
-       :in-amount (slw 8 [(range 0.1 0.95 0.05)]))
-
 (volume! :uhsmp 0.5)
-
-(stp :ksmpd)
 
 
 (trg :tick ping :in-trg [(rep 60 1)] :in-amp [0])
@@ -189,7 +184,7 @@
 
 (t/set-video-fixed 1 :fw)
 
-(t/bufferSection 2 0 64)
+(t/bufferSection 2 0 1)
 
 (t/set-video-fixed 2 :fw)
 
@@ -197,6 +192,26 @@
 
 (t/set-video-fixed 3 :fw)
 
+
+(def abm (audio-bus-monitor (get-out-bus :smp)))
+
+(on-trigger (get-trigger-id :tick :in-trg) (fn [val]
+                                             (let [obv  @abm]
+                                               ;(println obv)
+                                               (t/set-dataArray-item 0 obv)))
+            :smp_obv)
+
+(remove-event-handler :smp2_obv)
+
+
+
+(on-trigger (get-trigger-val-id :tb303sn :in-trg) (fn [val]
+                                                    (let [obv  (int (* 10 val))]
+                                              (t/set-fixed-buffer-index 2 :ff 10)
+                                               (t/set-dataArray-item 1 obv)))
+            :tb303sn_obv)
+
+(lss)
 
 (t/stop)
                                         ;Logo strings
