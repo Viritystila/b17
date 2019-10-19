@@ -189,11 +189,13 @@ void main(void){
   vec4 c3d = texture2D(iCam3,dsUV);
   vec4 c4d = texture2D(iCam4,dsUV);
 
+  vec2 uv_comp=uv;
+  uv_comp.x=uv_comp.x*0.5;
 
-  vec4 v0= texture2D(iVideo0, uv);
+  vec4 v0= texture2D(iVideo0, uv_comp);
   vec4 v1= texture2D(iVideo1, uv);
-  vec4 v2= texture2D(iVideo2, uv);
-  vec4 v3= texture2D(iVideo3, uv);
+  vec4 v2= texture2D(iVideo2, uv_comp);
+  vec4 v3= texture2D(iVideo3, uv_comp);
   vec4 v4= texture2D(iVideo4, uv);
 
 
@@ -212,10 +214,14 @@ void main(void){
   vec4 text= texture2D(iText, uv);
 
   c3.rgb=c3.bgr;
+  vec4 mask =vec4(0,1,0,0);
+  if (gl_FragCoord.x>950){
+      c3=mask;
+    }
 
-  vec4 vt1=colorRemoval(c3, v1, 0.5, 1, 1,0.0,0.0);
+  vec4 vt1=colorRemoval(v3, v0, 0.5, 1, 0,0.0,0.9);
 
-  vec4 vt3=colorRemoval(vt1, v1, 0.2, 1, 0.0,0.1,0.8);
+  vec4 vt3=colorRemoval(c3, vt1, 0.2, 1, 0.0,1,0);
 
   out_Color=vt3;
 
