@@ -190,7 +190,7 @@ void main(void){
   vec4 c4d = texture2D(iCam4,dsUV);
 
   vec2 uv_comp=uv;
-  uv_comp.x=uv_comp.x*0.5+uv_comp.x*0.5*it0*20;
+  uv_comp.x=uv_comp.x*0.5+uv_comp.x*0.5*1;
 
   vec2 uv_comp2=uv;
   uv_comp2.x=uv_comp2.x*0.75;
@@ -218,11 +218,11 @@ void main(void){
 
   c3.rgb=c3.bgr;
   vec4 mask =vec4(0,1,0,0);
-  if (gl_FragCoord.x>1){
+  if (gl_FragCoord.x>1*it0){
       c3=mask;
     }
 
-  vec4 vm=mix(v3, v2, it1/5);
+  vec4 vm=mix(v3, v2, it1/5*6);
 
   vec4 vt1=colorRemoval(vm, v0, 0.5, 1, 0,0.0,0.9);
 
