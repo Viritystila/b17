@@ -161,7 +161,7 @@
      ;[1 r [1 [1 1]] [r 1]]
      ;[r]
 
-     (fst 32 [1 1 [1 1] 1])
+     (acc (fst 4 [1 1 [1 1] 1]))
      (rep 1 [r])
      (fst 64 [1 r [1 [1 1]] [r 1]])
      (rep 1 [r])
@@ -222,6 +222,17 @@
 (stp :op)
 
 
+(add-tts-sample "k"  "generalx2paradisedaqx2.txt" 200)
+
+(trg :ksmp smp
+     :in-trg  [(rep 128 1)][1 1 1 1 1 1 1 [(rep 64 1)]] ;[r]
+     :in-buf ["b k"]
+     :in-step [2] ;(slw 1 [(sir 32 2.5 1 32)]) ;[2]
+     :in-loop [1]
+     :in-start-pos (slw 4  [(range 0 404040 5000)])
+     :in-amp [1.0])
+
+(stp :ksmp)
 
 (sta)
                                         ;Video
