@@ -156,26 +156,26 @@
 
 (trg :ks1
      ks1
-     :in-trg  ;[1 1 [1 1] 1]
-     ;[r]
-     ;[1 r [1 [1 1]] [r 1]]
-     ;[r]
+     :in-trg  [1 1 [1 1] 1]
+     [r]
+     [1 r [1 [1 1]] [r 1]]
+     [r]
 
-     (acc (fst 4 [1 1 [1 1] 1]))
-     (rep 1 [r])
-     (fst 64 [1 r [1 [1 1]] [r 1]])
-     (rep 1 [r])
+     ;(acc (fst 4 [1 1 [1 1] 1]))
+     ;(rep 1 [r])
+     ;(fst 64 [1 r [1 [1 1]] [r 1]])
+     ;(rep 1 [r])
      :in-dur [1]
      :in-amp [1]
      :in-note
-     ;(rep 1 ["n f#3"])
+     (rep 1 ["n f#3"])
      ;(rep 1 ["n d3"])
      ;(rep 1 ["n a3"])
      ;(rep 1 ["n c#4"])
-     (rep 1 ["n f#2"])
-     (rep 1 ["n d2"])
-     (rep 1 ["n a2"])
-     (rep 1 ["n c#3"])
+     ;(rep 1 ["n f#2"])
+     ;(rep 1 ["n d2"])
+     ;(rep 1 ["n a2"])
+     ;(rep 1 ["n c#3"])
      :in-decay [0.9]; [(range 0.01 1 0.01)]
      :in-coef [0.01] ;[(range 0.01 0.9 0.01)]
      )
@@ -192,20 +192,15 @@
      :in-trg [1 1 1 1]
                                         ;[r]
      ;(map-in [(rep 8 [1 r r 1])] scl 0.5)
-     :in-note  ;(rep 1 ["n f#2"])
-     ;(rep 1 ["n d2"])
-     ;(rep 1 ["n a2"])
-     ;(rep 1 ["n c#3"])
+     :in-note  (rep 1 ["n f#2"])
+     (rep 1 ["n d2"])
+     (rep 1 ["n a2"])
+     (rep 1 ["n c#3"])
 
-     (rep 1 (fll 32 [ "n f#2"  "n f#1" ]))
-     (rep 1 (fll 32 [ "n a2"  "n a1" ]))
-     (rep 1 (fll 32 [ "n c#2"  "n c#3" ]))
-     (rep 1 (fll 32 [ "n d1"  "n d2" ]))
-     ;(rep 1 ["n d2"])
-     ;(rep 1 ["n a2"])
-     ;(rep 1 ["n c#3"])
-                                        ;(rep 4 (fst 8 ["n e2" "n a3" "n d3"  "n c3"]))
-     ;(rep 4 (fst 8 ["n e2" "n d4" "n d3"  "n c3"] ))
+     ;(rep 1 (fll 32 [ "n f#2"  "n f#1" ]))
+     ;(rep 1 (fll 32 [ "n a2"  "n a1" ]))
+     ;(rep 1 (fll 32 [ "n c#2"  "n c#3" ]))
+     ;(rep 1 (fll 32 [ "n d1"  "n d2" ]))
      :in-gate-select [1]                 ;(rep 16 [1]) (rep 16 [0])
      :in-attack [0.001]
      :in-decay  [0.1]
@@ -225,7 +220,7 @@
 (add-tts-sample "k"  "generalx2paradisedaqx2.txt" 200)
 
 (trg :ksmp smp
-     :in-trg  [(rep 128 1)][1 1 1 1 1 1 1 [(rep 64 1)]] ;[r]
+     :in-trg [r] ;[(rep 128 1)][1 1 1 1 1 1 1 [(rep 64 1)]] (rep 7 [r])
      :in-buf ["b k"]
      :in-step [2] ;(slw 1 [(sir 32 2.5 1 32)]) ;[2]
      :in-loop [1]
@@ -233,6 +228,8 @@
      :in-amp [1.0])
 
 (stp :ksmp)
+
+(lss)
 
 (sta)
                                         ;Video
