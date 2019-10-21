@@ -30,17 +30,21 @@
                                         ;Fingerhands;
                                         ;;;;Sound;;;;
                                         ;;;;;;;;;;;;;
+(trg :smp smp2)
+
+(pause! :smp)
+
 (trg :smp smp2
-     :in-trg1 (rep 3 [1 r r  [1 1 r r]]
-                   [r  [1 1 r r] 1 r]
-                   [1 [r 1] r [r r 1 1]]
-                   [[1 r r r] [1 r] r [1 r]])
+     :in-trg1  [1 r r  [1 1 r r]]
+     [r  [1 1 r r] 1 r]
+     [1 [r 1] r [r r 1 1]]
+     [[1 r r r] [1 r] r [1 r]]
      ;(evr 3 [ [(rep 4 1) ] r  [(rep 8 1) ]  [(rep 16 1) ]] (rep 4 [1 [r 1 1 r]  r r]))
      ;(evr 2 (fn [x] (acc 16 x)) (rep 2 [1 [1 1] [1 1 1] [1 1 1 1]]))
      [[1 1 r r] r r (acc 16 [(rep 4 1 )])]
-     ;;  [1 r r [1 1 r r]]
-     ;; [[r r 1 1 r r r r] r]
-     ;;  [[(rep 4 1)] r 1 1 ]
+     [1 r r [1 1 r r]]
+     [[r r 1 1 r r r r] r]
+     [[(rep 4 1)] r 1 1 ]
      :in-step1 [2]
      :in-loop1 [0]
      :in-start-pos1 [0]
@@ -50,21 +54,27 @@
           [r [1 1] 1 [r 1]]
           [r  r [1 1 r r] r]
           [[r 1] [r 1] r [(rep  4 1)]])
-     [[1 1 r r] r r [(rep 32 2)]] [1 r 1 [(rep 16 1)]]
-     [[1 1 r r] r [1 1] [(rep 32 1)]] [1 r 1 [(rep 16 2)]]
-     [[1 1 r r] 1 1 [(rep 32 1)]] [1 r [1 1 1 1] [(rep 16 1)]]
-     [[1 1 r r] r r [(rep 32 1)]] [[1 1] r 1 [(rep 16 1)]]
+     ;[[1 1 r r] r r [(rep 32 2)]] [1 r 1 [(rep 16 1)]]
+     ;[[1 1 r r] r [1 1] [(rep 32 1)]] [1 r 1 [(rep 16 2)]]
+     ;[[1 1 r r] 1 1 [(rep 32 1)]] [1 r [1 1 1 1] [(rep 16 1)]]
+     ;[[1 1 r r] r r [(rep 32 1)]] [[1 1] r 1 [(rep 16 1)]]
      :in-step2 [1] ;":in-trg2"
      :in-loop2 [0]
      :in-start-pos2 [0]
      :in-buf2  (fll 32 ["b sn1" "bsn2" "bsn3" "bsn4"])
      :in-amp2 [0.15])
 
+(play! :smp)
+
+(pause! :smp)
 
 (stp :smp)
 
 (sta)
 
+(trg :tb303sn tb303)
+
+(pause! :tb303sn)
 
 (trg :tb303sn
      tb303
@@ -91,8 +101,11 @@
      (slw 8 (rev [(range 4000 200 -50)]))
      :in-wave  [0])
 
-(volume! :tb303sn 0.5)
+(play! :tb303sn)
 
+(pause! :tb303sn)
+
+(volume! :tb303sn 0.5)
 
 (trg! :tb303sn :tb303e trg-fx-echo :in-decay-time [0.125]  :in-delay-time [0.1] :in-amp [1])
 
@@ -100,28 +113,35 @@
 
 
 (trg :hhsmp smp
-     :in-trg  (rep 7 [r] )  [r r r [(rep 16 1)]]
+     :in-trg  (rep 1 [r] )
+     [r r r [(rep 16 1)]]
+     [r]
+     [1  [(rep 4 1)] 1 [(rep 8 1)]]
+     [(rep 16 1)]
      :in-step  [2]; (fst 16 [(range -3 3 0.01)])
      :in-loop [0] ;(rep 3 [0])
-     :in-buf ["b co2"] )
+     :in-buf (fll 128 ["b co3" "b cc0"]) )
 
 
-(volume! :hhsmp 1)
+(volume! :hhsmp 0.25)
 
 (stp :hhsmp)
 
 (trg! :hhsmp :hhsmppc trg-fx-pitch-shift :in-pitch-ratio  (slw 4 [(range 0.5 1.5 0.01)])
       )
 
-(add-sample "uh" (string-to-buffer "UHHHHHHHHAAAAAAAAAAAA"))
+(stp :hhsmppc)
 
-(add-sample "ee" (string-to-buffer "EEEE"))
+(do
+  (add-sample "uh" (string-to-buffer "UHHHHHHHHAAAAAAAAAAAA"))
 
-(add-sample "aa" (string-to-buffer "AAAAAAAAAA"))
+  (add-sample "ee" (string-to-buffer "EEEE"))
 
-(add-sample "oo" (string-to-buffer "OOOOOOOOOO"))
+  (add-sample "aa" (string-to-buffer "AAAAAAAAAA"))
 
-(add-sample "uhea" (string-to-buffer "UHHHHHHHHEEEEEEEAAAAAAA"))
+  (add-sample "oo" (string-to-buffer "OOOOOOOOOO"))
+
+  (add-sample "uhea" (string-to-buffer "UHHHHHHHHEEEEEEEAAAAAAA")))
 
 
 
@@ -149,10 +169,15 @@
 
 (volume! :uhsmp 0.5)
 
+(stp :uhsmp)
 
 (trg :tick ping :in-trg [(rep 60 1)] :in-amp [0])
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(trg :ks1 ks1)
+
+(pause! :ks1)
 
 (trg :ks1
      ks1
@@ -180,6 +205,8 @@
      :in-coef [0.01] ;[(range 0.01 0.9 0.01)]
      )
 
+(play! :ks1)
+
 (volume! :ks1 1)
 
 (trg! :ks1 :ks1f trg-fx-feedback :in-delay-time [0.25] :in-decay-time [0.25])
@@ -187,6 +214,10 @@
 (stp :ks1)
 
 (println (map find-note-name (chord-degree :ii :d4 :melodic-minor)))
+
+(trg :op overpad)
+
+(pause! :op)
 
 (trg :op overpad
      :in-trg [1 1 1 1]
@@ -208,6 +239,8 @@
      :in-release [10.13]
      :in-amp [1])
 
+(play! :op)
+
 (volume! :op 0.45)
 
 (trg! :op :ope trg-fx-echo :in-decay-time [0.25]  :in-delay-time [0.001] :in-amp [0.05])
@@ -217,15 +250,29 @@
 (stp :op)
 
 
-(add-tts-sample "k"  "generalx2paradisedaqx2.txt" 200)
+(add-tts-sample "k1"  "generalx2paradisedaqx2.txt" 200)
+
+
+(add-tts-sample "k2"  "generalx2paradisedaqx2.txt" 200)
+
+
+(add-tts-sample "k3"  "generalx2paradisedaqx2.txt" 200)
+
+
+(trg :ksmp smp)
+
+(pause! :ksmp)
 
 (trg :ksmp smp
      :in-trg [r] ;[(rep 128 1)][1 1 1 1 1 1 1 [(rep 64 1)]] (rep 7 [r])
-     :in-buf ["b k"]
+     :in-buf ["b k3"]
      :in-step [2] ;(slw 1 [(sir 32 2.5 1 32)]) ;[2]
      :in-loop [1]
      :in-start-pos (slw 4  [(range 0 404040 5000)])
      :in-amp [1.0])
+
+
+(play! :ksmp)
 
 (stp :ksmp)
 
