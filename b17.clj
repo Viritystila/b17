@@ -39,28 +39,23 @@
      [1 r r  [1 1 r r]]
      [[[1 1] r] [1 1] r  [1 1 r r]]
      [r  [1 1 r r] 1 r]
-     ;[1 [r 1] r [r r 1 1]]
-     ;[[1 r r r] [1 r] r [1 r]]
-     ;(evr 3 [ [(rep 4 1) ] r  [(rep 8 1) ]  [(rep 16 1) ]] (rep 4 [1 [r 1 1 r]  r r]))
-     ;(evr 2 (fn [x] (acc 16 x)) (rep 2 [1 [1 1] [1 1 1] [1 1 1 1]]))
-     ;[[1 1 r r] r r [(rep 8 1 )]]
-     ;[1 r r [1 1 r r]]
-     ;[[r r 1 1 r r r r] r]
-     ;[[(rep 4 1)] r 1 [1 r] ]
+     [[1 1 r r] r r [(rep 4 1 )]]
+     [1 r r [1 1 r r]]
+     [[r r 1 1 r r r r] r]
+     [[(rep 4 1)] r 1 [1 r] ]
      :in-step1 [2]
      :in-loop1 [0]
      :in-start-pos1 [0]
-     :in-buf1   [ "b bd1"]         ; (fll 8 [ "b bd1"  "b bass23"]) ;[ "b bd1" ]
+     :in-buf1 [ "b bd1" ] ; (fll 8 [ "b bd1"  "b bass23"]) ;[ "b bd1" ]
      :in-trg2
      [r [r  1] 1 1]
      [r 1 r [r r 1 1]]
      [r [1 1] 1 [r 1]]
      [[(rep 4 1)]  r [1 1 r r] r]
-     ;[[r 1] [r 1] r [(rep  4 1)]]
-     ;[[1 1 r r] r r [(rep 32 2)]] [1 r 1 [(rep 16 1)]]
-     ;[[1 1 r r] r [1 1] [(rep 32 1)]] [1 r 1 [(rep 16 2)]]
-     ;[[1 1 r r] 1 1 [(rep 32 1)]] [1 r [1 1 1 1] [(rep 16 1)]]
-     ;[[1 1 r r] r r [(rep 32 1)]] [[1 1] r 1 [(rep 16 1)]]
+     [[1 1 r r] r r [(rep 32 2)]]
+     [1 r 1 [(rep 48 1)]]
+     [[1 1 r r] r r [(rep 32 1)] r r [(rep 16 1)] r]
+     ;[1 r 1 [(rep 16 2)]]
      :in-step2 [1]; [1 [1 1] 1.5 1.5]     ; [1.5] [1]       ;":in-trg2"
      :in-loop2 [0]
      :in-start-pos2 [0]
@@ -73,10 +68,7 @@
 
 (stp :smp)
 
-
-
-(trg! :smp :smpe trg-fx-echo :in-decay-time [(/ (/ 1 0.5626)  2)]  :in-delay-time  [(/ (/ 1 0.5626)  50)] :in-amp [0.00015])
-
+(trg! :smp :smpe trg-fx-echo :in-decay-time [(/ (/ 1 0.5626)  2)]  :in-delay-time  [(/ (/ 1 0.5626)  50)] :in-amp [0.15])
 
 (sta)
 
@@ -86,51 +78,30 @@
 
 (trg :tb303sn
      tb303
-     :in-trg ;; (map (fn [x] (map-in x scl 0.1)) (rep 4  [r 1 2 [1 12]]
-             ;;                                      [r]
-             ;;                                      [r  [1 1] 12 r]
-             ;;                                      [r]
-             ;;                                      (fst 2 [r [1 2] 1 [1 12]])
-             ;;                                      [r]
-             ;;                                      [[1 1] [r 1] r [r 12]]))
-     [(rep 16 1)]
-     [r]
-     :in-amp [0.75]
-     :in-note  (rep 1  (fll 32 ["n c2" r "n c3" "n d1"]) )
-     [r]
-      (fll 64 ["n d1" r "n c2" r r "n d3"])
-      (rep 4 [r])
-      (fll 64 ["n e3" r "n c4" r r "n d3"])
-     :in-gate-select [1]
-     :in-attack [0.01]
-     :in-decay [0.019]
-     :in-sustain [0.25]
-     :in-release [0.73]
-     :in-r [0.09]
-     :in-cutoff (slw 8 [(range 200 4000 50)])
-     (slw 8 (rev [(range 4000 200 -50)]))
-     :in-wave  [0])
-
-
-(trg :tb303sn
-     tb303
      :in-trg  ;["n d1" r ["n c2" "n d3"]  "n d3"]
      ;["n d1" r "n c2"  "n d3"]
      ;["n d1" r ["n c2" "n d3"]  [r "n d3" r "n d1"]]
-     ;[["n d1" "n d2"] r ["n c2" "n e2" "n e1" "n e2"]  ["n e2" "n d3"]]
-     ["n d1" "ne0" ["n c1" "n d0"]  ["n d0" "n e1"]]
-     ["n d1" "n c0" ["n c1" "n d0"]  ["n d0" "n e1" "n d2" "n c2"]]
+     ;[["n d1" "n d2"] r  ["n c2" "n e2" "n e1" "n e2"]  ["n e2" "n d3"]]
+
+     ["n c3" ["n c3" "n d3"]]
+     ["n e3" ["n c2"  "n c3"]]
+     [["n e2" "n e3" r r] [r "n d3" "n e3" "n d2"]]
+     ["n d3" ["nd3" "nc2" "ne2" "ne3"]]
+     ;[["n d1" "n d2"] ["n c2" "n e2" "n e1" "n e2"]]
+
+     ;["n d1" "ne0" ["n c1" "n d0"]  ["n d0" "n e1"]]
+     ;["n d1" "n c0" ["n c1" "n d0"]  ["n d0" "n e1" "n d2" "n c2"]]
      :in-amp [1]
      :in-note  ":in-trg"
      :in-gate-select [1]
-     :in-attack [0.01]
+     :in-attack [0.001]
      :in-decay [0.019]
      :in-sustain [0.25]
      :in-release [1.73]
      :in-r [0.9]
      :in-cutoff [700]
      :in-wave  ;(rep 4 [0])
-     (rep 4 [1])
+     (rep 4 [2])
      ;(rep 4 (fll 512 [0 1 2]))
      )
 
@@ -173,6 +144,8 @@
 
 (stp :hhsmppc)
 
+(sta)
+
 (do
   (add-sample "uh" (string-to-buffer "UHHHHHHHHAAAAAAAAAAAA"))
 
@@ -190,25 +163,18 @@
 (pause! :uhsmp)
 
 (trg :uhsmp smp
-     :in-trg (map (fn [x] (map-in x scl 0.1))
-                  (rep 4 [r]
-                       [r 1 2 [1 12]]
-                       [r]
-                       [r  [1 1] 12 r]
-                       [r]
-                       (fst 2 [r [1 2] 1 [1 12]])
-                       [r]
-                       [[1 1] [r 1] r [r 12]]))
-                                        ; [1] [r] [r]
-                                        ;[1 r 1  [(rep 7 1) r (rep 7 1) r]]
-                                        ;(rep 3 [1 r 1 r])
-                                        ;[1 r 1 [1 1 1 1] 1 r 1 1 1 1 (acc [(rep 8 1)]) 1 1 1 1 [1 1 1 1]]
-                                        ;(acc [(rep 8 1)])
+     :in-trg
+     [(rep 4 1)]
+
+                                        ;[r [r  1] 1 1]
+     ;[r 1 r [r r 1 1]]
+     ;[r [1 1] 1 [r 1]]
+     ;[[(rep 4 1)]  r [1 1 r r] r]
      :in-loop [0]
      :in-buf ["b uhea"]
-     ["b uh"] ["b oo"] (fst 4 ["b aa" "b ee"])
+     ["b uh"] ["b oo"] (fst 16 ["b aa" "b ee"])
      :in-amp [0.5]
-     :in-step (fst 1 [(range 1.25 2.75 0.25)])
+     :in-step [2]; (fst 32 [(range 1.5 2.5 0.25)])
      )
 
 (play! :uhsmp)
