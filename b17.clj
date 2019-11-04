@@ -27,40 +27,40 @@
 
 
                                         ;;;;;;;;;;;;;
-                                        ;Fingerhands;
-                                        ;;;;Sound;;;;
+                                        ;;Sormikäsi;;
+                                        ;;;;Ääni;;;;
                                         ;;;;;;;;;;;;;
-(trg :smp smp2)
+(trg :smp smp2 :in-amp1 [0] :in-amp2 [0])
 
 (pause! :smp)
 
 (trg :smp smp2
-     :in-trg1  [1 r r  r]
+     :in-trg1  [1 r [r 1] r]
      [1 r r  [1 1 r r]]
-     [[[1 1] r] [1 1] r  [1 1 r r]]
-     [r  [1 1 r r] 1 r]
-     [[1 1 r r] r r [(rep 4 1 )]]
-     [1 r r [1 1 r r]]
-     [[r r 1 1 r r r r] r]
-     [[(rep 4 1)] r 1 [1 r] ]
+     [[[1 1] r] r  [1 1] [1 1 r r]]
+     [[1 1 r r] r [1 1] r]
+     ;[1 r r [1 1 r r]]
+     ;[[r r 1 1 r r r r] r]
+     ;[[(rep 4 1)] r 1 [1 r] ]
      :in-step1 [2]
      :in-loop1 [0]
      :in-start-pos1 [0]
      :in-buf1 [ "b bd1" ] ; (fll 8 [ "b bd1"  "b bass23"]) ;[ "b bd1" ]
      :in-trg2
-     [r [r  1] 1 1]
+     [r 1 r 1]
      [r 1 r [r r 1 1]]
-     [r [1 1] 1 [r 1]]
-     [[(rep 4 1)]  r [1 1 r r] r]
-     [[1 1 r r] r r [(rep 32 2)]]
-     [1 r 1 [(rep 48 1)]]
-     [[1 1 r r] r r [(rep 32 1)] r r [(rep 16 1)] r]
+     [[r [1 1]]  [r 1]]
+     [[1 1 r 1]  r [r 1 1 r] 1]
+     ;[[1 1 r r] r r [(rep 32 2)]]
+     ;[1 r 1 [(rep 48 1)]]
+     ;[[1 1 r r] r r [(rep 32 1)] r r [(rep 16 1)] r]
      ;[1 r 1 [(rep 16 2)]]
      :in-step2 [1]; [1 [1 1] 1.5 1.5]     ; [1.5] [1]       ;":in-trg2"
      :in-loop2 [0]
      :in-start-pos2 [0]
-     :in-buf2  (fll 32 ["b sn1" "bsn4"])
-     :in-amp2 [0.15])
+     :in-buf2  (fll 512 ["b sn2" "bsn0"])
+     :in-amp2 [0.15]
+     :in-amp1 [1])
 
 (play! :smp)
 
@@ -68,9 +68,13 @@
 
 (stp :smp)
 
-(trg! :smp :smpe trg-fx-echo :in-decay-time [(/ (/ 1 0.5626)  2)]  :in-delay-time  [(/ (/ 1 0.5626)  50)] :in-amp [0.15])
+(trg! :smp :smpe trg-fx-echo :in-decay-time [(/ (/ 1 0.5626)  2)]  :in-delay-time  [(/ (/ 1 0.5626)  50)] :in-amp [0.25])
+
+(stp :smpe)
 
 (sta)
+
+(print (map find-note-name (chord-degree :i :c2 :major 8)))
 
 (trg :tb303sn tb303)
 
@@ -78,30 +82,38 @@
 
 (trg :tb303sn
      tb303
-     :in-trg  ;["n d1" r ["n c2" "n d3"]  "n d3"]
-     ;["n d1" r "n c2"  "n d3"]
+     :in-trg
+     ;["n d1" r ["n c2" "n d3"]  "n d3"]
+     ;[["n d1" "nb1"] r "n c2"  "n d3"]
      ;["n d1" r ["n c2" "n d3"]  [r "n d3" r "n d1"]]
      ;[["n d1" "n d2"] r  ["n c2" "n e2" "n e1" "n e2"]  ["n e2" "n d3"]]
 
-     ["n c3" ["n c3" "n d3"]]
-     ["n e3" ["n c2"  "n c3"]]
-     [["n e2" "n e3" r r] [r "n d3" "n e3" "n d2"]]
-     ["n d3" ["nd3" "nc2" "ne2" "ne3"]]
+     ;(slw 2  [ ["n d1" "n d2"] r  ["n c2" "n e2" "n e1" "n e2"]  ["n e2" "n d3"]])
+
+     ;[(fll 32 ["n d3" "n d2"]) r r r  (fll 16 ["n e3" "n c2"]) r r r]
+
+ ;    [ ["nc4" "na3" ["n f3" "nd3"]] ["nb2" "ng2" ["ne2" "nc2"]]]
+
+     ;["n c3" ["n c3" "n d3"]]
+     ;["n e3" ["n c2"  "n c3"]]
+     ;(slw 2 [["n e2" "n e3" r r] [r "n d3" "n e3" "n d2"]])
+     ;["n d3" ["nd3" "nb2" "nf2" "ne3"]]
      ;[["n d1" "n d2"] ["n c2" "n e2" "n e1" "n e2"]]
 
-     ;["n d1" "ne0" ["n c1" "n d0"]  ["n d0" "n e1"]]
-     ;["n d1" "n c0" ["n c1" "n d0"]  ["n d0" "n e1" "n d2" "n c2"]]
+     (rep 2 ["n d1" "ne0" ["n c1" "n d0"]  ["n d0" "n e1"]])
+     ["n d1" "n c0" ["n c1" "n d0"]  ["n d0" "n e1" "n d2" "n c2"]]
+     [["n c1" "n d1"] r  ["n c0" "n e1" "n e1" "n f1"]  ["n b0" "n d1"]]
      :in-amp [1]
      :in-note  ":in-trg"
      :in-gate-select [1]
      :in-attack [0.001]
      :in-decay [0.019]
      :in-sustain [0.25]
-     :in-release [1.73]
+     :in-release [5.73]
      :in-r [0.9]
      :in-cutoff [700]
      :in-wave  ;(rep 4 [0])
-     (rep 4 [2])
+     (rep 4 [2]) (rep 2 [2])
      ;(rep 4 (fll 512 [0 1 2]))
      )
 
@@ -111,7 +123,7 @@
 
 (volume! :tb303sn 0.5)
 
-(trg! :tb303sn :tb303e trg-fx-echo :in-decay-time [0.125]  :in-delay-time [0.1] :in-amp [1])
+(trg! :tb303sn :tb303e trg-fx-echo :in-decay-time [0.125]  :in-delay-time [0.01] :in-amp [1])
 
 (stp :tb303sn)
 
@@ -120,29 +132,6 @@
 (trg :hhsmp smp :in-amp [0])
 
 (pause! :hhsmp)
-
-(trg :hhsmp smp
-     :in-trg  (rep 1 [r] )
-     [r r r [(rep 16 1)]]
-     [r]
-     [1  [(rep 4 1)] 1 [(rep 8 1)]]
-     [(rep 16 1)]
-     :in-step  [2]; (fst 16 [(range -3 3 0.01)])
-     :in-loop [0] ;(rep 3 [0])
-     :in-amp [0.5]
-     :in-buf (fll 128 ["b co3" "b cc0"]) )
-
-
-(volume! :hhsmp 0.25)
-
-(stp :hhsmp)
-
-(trg! :hhsmp :hhsmppc trg-fx-pitch-shift :in-pitch-ratio  (slw 4 [(range 0.5 1.5 0.01)])
-      )
-
-(play! :hhsmp)
-
-(stp :hhsmppc)
 
 (sta)
 
@@ -179,6 +168,8 @@
 
 (play! :uhsmp)
 
+(pause! :uhsmp)
+
 (volume! :uhsmp 0.5)
 
 (stp :uhsmp)
@@ -193,6 +184,8 @@
 
 (stp :tick)
 
+(sta)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -202,19 +195,30 @@
 
 (trg :ks1
      ks1
-     :in-trg  [1 1 [1 1] 1]
-     [r]
-     [1 r [1 [1 1]] [r 1]]
-     [r]
+     :in-trg
+     ;["nf1"  "nf3"  "nf3"  "nf3" ]
+     ;["nf#3" ["nd3" "nc3" "nf3" "nc2"]]
+
+     ;(fst 16 ["nc3" "nc2" "nc2" "nb2"])
+     ;(fst 16 ["nc3" "nc2" "nc1" "ne3"])
+     ;(fst 16 ["nc3" "nd2" "nc1" "nd3"])
+
+
+     (fst 16 ["nc2" "nc1" "nc1" "nb1"])
+     (fst 16 ["nc2" "nc1" "nc0" "ne2"])
+     (fst 16 ["nc2" "nd1" "nc0" "nd2"])
+     ;[r]
+     ;[1 r [1 [1 1]] [r 1]]
+     ;[r]
 
      ;(acc (fst 4 [1 1 [1 1] 1]))
      ;(rep 1 [r])
      ;(fst 64 [1 r [1 [1 1]] [r 1]])
      ;(rep 1 [r])
-     :in-dur [1]
+     :in-dur [0.5]
      :in-amp [1]
-     :in-note
-     (rep 1 ["n f#3"])
+     :in-note ":in-trg"
+     ;(rep 1 ["n f#3"])
      ;(rep 1 ["n d3"])
      ;(rep 1 ["n a3"])
      ;(rep 1 ["n c#4"])
@@ -222,8 +226,8 @@
      ;(rep 1 ["n d2"])
      ;(rep 1 ["n a2"])
      ;(rep 1 ["n c#3"])
-     :in-decay [0.9]; [(range 0.01 1 0.01)]
-     :in-coef [0.01] ;[(range 0.01 0.9 0.01)]
+     :in-decay [0.5]; [(range 0.01 1 0.01)]
+     :in-coef [0.5] ;[(range 0.01 0.9 0.01)]
      )
 
 (play! :ks1)
@@ -231,6 +235,8 @@
 (volume! :ks1 1)
 
 (trg! :ks1 :ks1f trg-fx-feedback :in-delay-time [0.25] :in-decay-time [0.25])
+
+(stp :ks1f)
 
 (stp :ks1)
 
@@ -286,10 +292,10 @@
 
 (trg :ksmp smp
      :in-trg [r] ;[(rep 128 1)][1 1 1 1 1 1 1 [(rep 64 1)]] (rep 7 [r])
-     :in-buf ["b k3"]
+     :in-buf ["b k1"]
      :in-step [2] ;(slw 1 [(sir 32 2.5 1 32)]) ;[2]
      :in-loop [1]
-     :in-start-pos (slw 4  [(range 0 404040 5000)])
+     :in-start-pos  (slw 4  [(range 0 404040 5000)])
      :in-amp [1.0])
 
 
@@ -308,7 +314,7 @@
 
 
                                         ;;;;;;;;;;;;;
-                                        ;Fingerhands;
+                                        ;;Sormikäsi;;
                                         ;;;;video;;;;
                                         ;;;;;;;;;;;;;
 (t/post-start-cam 3)
