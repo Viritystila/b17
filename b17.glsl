@@ -12,11 +12,11 @@ vec2 distortUV(vec2 uv, vec2 nUV, sampler2D nstex ,  float ip1)
   vec2 uv_orig=uv;
   float intensity = 0.1;
   float scale = 0.05;//*ip1;
-  float speed = 0.06;
+  float speed = 1.06;
 
 
-    nUV.x += sin((ip1))*speed;
-    nUV.y += sin(ip1)*speed ;
+    nUV.x += ip1*speed;
+    nUV.y += ip1*speed ;
     vec2 noise= texture(nstex, nUV*scale).xy;
 
     uv += ((-1.0+noise*2));// * intensity;
@@ -126,21 +126,22 @@ vec4 chromaKey(vec4 fg, vec4 bg){
     return cf6;
 }
 
-vec4 kaleoidscope(vec2 n, float mod1, sampler2D tex0)
+vec4 kaleoidscope(vec2 n, float mod1, float numbi, float numbc,  sampler2D tex0)
 {
   vec2  u = n;
         vec2 p = -1. + 2. * u;
 	float t = mod1,
           a = atan(p.y, p.x) ,
-          r = length(p) ,
-          c = .1 * cos(t + 7. * a);
-        float numb= 6.0;
+          r = length(p)*1 ,
+          c = numbc * cos(t + 7. * a);
+        float numb= numbi;
 	vec4 o = vec4(
         texture(
             tex0,
             vec2(numb * a / 5.14, -t + sin(numb  * r + t) + c) * 0.5)) * (1.75 + 0.75 * (sin(t + numb * r) + c));
         return o;
 }
+
 
 //Artifact code adapted from https://www.shadertoy.com/view/Md2GDw
 void main(void){
@@ -150,21 +151,29 @@ void main(void){
   float it3=iDataArray[3];
   float it4=iDataArray[4];
   float it5=iDataArray[5];
+  float it6=iDataArray[6];
+  float it7=iDataArray[7];
 
   int textId=int(iDataArray[51]);
 
   vec2 uv = (gl_FragCoord.xy / iResolution.xy);
   //uv.x=uv.x*it1;
   //uv=gl_FragCoord.xy/vec2(1080,1920);
-  vec2 uv_noise=noiseUV(uv, 1, 0.01/(it0 ));
+  vec2 uv_noise=noiseUV(uv, 1, 0.01/(it7 ));
 
   vec2 uvi=uv;
   uv.y=1.0-uv.y;
-  vec2 dsUV=distortUV(uv, uvi, iVideo0, 1);
+  vec2 dsUV=distortUV(uv, uv, iVideo1, 2*it7);
 
   vec4 t0 = texture2D(iChannel0,uv);
 
   vec4 fftw=texture2D(iFftWave, uv);
+
+  vec4 pf = texture2D(iPreviousFrame, uvi);
+
+  vec4 pfd = texture2D(iPreviousFrame, dsUV);
+
+
 
   vec4 c0 = texture2D(iCam0,uv);
   vec4 c1 = texture2D(iCam1,uv);
@@ -188,6 +197,7 @@ void main(void){
   vec4 c2d = texture2D(iCam2,dsUV);
   vec4 c3d = texture2D(iCam3,dsUV);
   vec4 c4d = texture2D(iCam4,dsUV);
+
 
   vec2 uv_comp=uv;
   uv_comp.x=uv_comp.x*0.5+uv_comp.x*0.5*1;
@@ -214,20 +224,28 @@ void main(void){
   vec4 v3d= texture2D(iVideo3, dsUV);
   vec4 v4d= texture2D(iVideo4, dsUV);
 
+  vec4 v0kal= kaleoidscope(uv, it5 , 5, it4*it5*0.001, iVideo4);
+
   vec4 text= texture2D(iText, uv);
 
   c3.rgb=c3.bgr;
   vec4 mask =vec4(0,1,0,0);
-  if (gl_FragCoord.x>1*it0){
-      c3=mask;
-    }
+  if (gl_FragCoord.x>1*2000){
+     c3=mask;
+   }
 
-  vec4 vm=mix(v3, v2, it1/5*6);
+  vec4 vm=mix(v3, v2, 0);
 
   vec4 vt1=colorRemoval(vm, v0, 0.5, 1, 0,0.0,0.9);
 
-  vec4 vt3=colorRemoval(c3, vt1, 0.2, 1, 0.0,1,0);
+  vec4 vi=mix(c3, v3, 0);
 
-  out_Color=vt3;
+  vec4 vt3=colorRemoval(vi, v0kal, 0.2, 1, 0.1,0.0,0.6);
+
+  vec4 vt4=colorRemoval(v0, v0kal, 0.6, 1 , 0, 0, 0);
+
+  vec4 vmss=mix(v2d, v0, 10);
+
+  out_Color=mix(vmss, pfd, 0.89*it7*it7*10); //vt4;
 
 }
