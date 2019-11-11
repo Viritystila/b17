@@ -33,7 +33,7 @@ vec2 noiseUV(vec2 uv, float mod1, float mod2){
 }
 
 vec4 glitch(vec2 uv_noise, vec2 uv,  vec4 v1In, vec4 v2In, float mod1, sampler2D tex1, sampler2D tex2){
-  float block_thres =pow(fract(mod1+12999.0), 2.0)*0.02;
+  float block_thres =pow(fract(mod1+1999.0), 2.0)*0.02;
   float line_thres =pow(fract(mod1+ 33336), 3.0)* 0.7;
 
   vec2 uv_r =uv, uv_g=uv, uv_b=uv;
@@ -49,16 +49,16 @@ vec4 glitch(vec2 uv_noise, vec2 uv,  vec4 v1In, vec4 v2In, float mod1, sampler2D
 
   vec4 glitchText=v1In;
 	// loose luma for some blocks
-	if (texture2D(tex1, uv_noise).g < block_thres)
+	if (texture2D(tex1, uv_noise).g > block_thres)
 		glitchText.rgb = v2In.ggg;
 
         	// discolor block lines
-	if (texture2D(tex2, vec2(uv_noise.y, 0.0)).b * 2.5 < line_thres)
+	if (texture2D(tex2, vec2(uv_noise.y, 0.0)).b * 2.5 <  line_thres)
           glitchText.rgb = vec3(0.0, dot(glitchText.rgb, vec3(1.0)), 0.0);
 
 
 	// interleave lines in some blocks
-	if (texture2D(tex1, uv_noise).g * 0.05  < block_thres ||
+	if (texture2D(tex1, uv_noise).g * 0.05  > block_thres ||
 		texture(tex1, vec2(uv_noise.y, 0.0)).g * 2.5 < line_thres) {
 		float line = fract(gl_FragCoord.y / 3.0);
 		vec3 mask = vec3(3.0, 0.0, 0.0);
@@ -153,13 +153,18 @@ void main(void){
   float it5=iDataArray[5];
   float it6=iDataArray[6];
   float it7=iDataArray[7];
+  float it8=iDataArray[8];
+  float it9=iDataArray[9];
+
+
+  float it11=iDataArray[11];
 
   int textId=int(iDataArray[51]);
 
   vec2 uv = (gl_FragCoord.xy / iResolution.xy);
   //uv.x=uv.x*it1;
   //uv=gl_FragCoord.xy/vec2(1080,1920);
-  vec2 uv_noise=noiseUV(uv, 1, 0.01/(it7 ));
+  vec2 uv_noise=noiseUV(uv, 1, 0.1/(it0));
 
   vec2 uvi=uv;
   uv.y=1.0-uv.y;
@@ -224,7 +229,7 @@ void main(void){
   vec4 v3d= texture2D(iVideo3, dsUV);
   vec4 v4d= texture2D(iVideo4, dsUV);
 
-  vec4 v0kal= kaleoidscope(uv, it5 , 5, it4*it5*0.001, iVideo4);
+  vec4 v0kal= kaleoidscope(uv, it11 , 5, it11*1, iVideo4);
 
   vec4 text= texture2D(iText, uv);
 
@@ -246,6 +251,42 @@ void main(void){
 
   vec4 vmss=mix(v2d, v0, 10);
 
-  out_Color=mix(vmss, pfd, 0.89*it7*it7*10); //vt4;
+
+  //Alkuun
+  //uheaa, setti1
+  vec4 o1=colorRemoval(c3, v0, 10*it8, 1, 0, 0, 0);
+
+  //gb2 tulee mukaan
+  vec4 o2= colorRemoval(c3, v0d, 10*it8, 1, 0, 0, 0);
+
+  //uhea muuttuu, setti2
+  o2=v0d;
+  o1=v0;
+  vec4 o3 = mix (o1, o2, 11+it7);
+  o3=colorRemoval(v2, o3, 1, 0.2, 0, 0, 0);
+  o3=mix(o3, o3, 10*it7);
+  ///Uheat pois ja kick3 tilalle, setti3
+
+  vec4 o4= mix(vmss, pfd, 0.0089*it6);
+
+  //nh tule mukaan, setti
+  o4= mix(vmss, pfd, 10);
+
+  ///Spede tulee mukaan kovilla rummuilla, setti4
+  o4= mix(v0, pfd, 0.59);
+  vec4 o5 = colorRemoval(v3, o4, 1,0.2,  0, 0, 0.6);
+
+
+  ///// setti5
+
+
+  vec4 o6=colorRemoval(v0, v0kal, 0.6, 1 , 0, 0, 0);
+
+
+  ///setti 6
+  vec4 o7i=  glitch(uv_noise, uv,  v1, v1, 1, iVideo1, iVideo0);
+  vec4 o7= mix(v1, o7i, 0.07);
+
+  out_Color=o3; //o7;//o5; //o4;//o3;//o2; //o1 ;// mix(vmss, pfd, 0.89*it7*it7*10) ; //vt4;
 
 }
