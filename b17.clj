@@ -556,18 +556,30 @@
 
 (trg :uhsmp smp
      :in-trg
-
-     (evr 5 [(rep 32 "buh")] (evr 3 [r] (evr 4 acc (evr 8 (fn[x] (fst 16 x)) (slw 32 (fll 32 ["bks1" "bks2" "bks3" "bks4"]))))))
-
-     :in-loop (evr 4 [1] (rep 32 [0]))
+     (->>  (slw 16 (fll 16 ["bks1" "bks2" "bks3" "bks4"]))
+           (evr 5 [(rep 32 "buh")])
+           (evr 3 [r])
+           (evr 4 acc)
+           (rpl 6 [(rep 16 "bahh")])
+           (evr 8 (fn [x] (fst 16 x)))
+           )
+     :in-loop
+     (->> (rep 32 [0])
+          (evr 5  [1]))
      :in-buf ":in-trg"
      :in-amp [0.75]
-     :in-start-pos  (evr 4 [(range 0 1600 10)] (rep 32 [0]))
-     :in-step (evr 4 (fst 4 [(range -0.5 2.5 0.25) 2 2 1]) (rep 32 [2]))
+     :in-start-pos
+     (->> (rep 32 [0])
+          (evr 5 [(range 0 1600 10)]))
+     :in-step ;(evr 5 (fst 4 [(range -0.5 2.5 0.25) 2 2 1]) (rep 32 [2]))
+     (->> (rep 32 [2])
+          (evr 5 (fst 4 [(range -2.5 2.5 0.25) 2 2 1])))
      )
 
 (trg! :uhsmp :uhsmpe trg-fx-echo
-      :in-amp (evr 6 [1] (rep 32 [0]))
+      :in-amp ;(evr 6 [1] (rep 32 [0]))
+      (->> (rep 32  [0])
+           (evr 6 [1]))
       :in-decay-time [1.1]
       :in-delay-time [0.01])
 
@@ -575,13 +587,20 @@
 
 (pause! :uhsmp)
 
+(stp :uhsmp)
+
 (sta)
 
-(into () (vec  (->>  1 (rep 4) (vec) (rep  4))))
 
 ;;;;;;;
 ;;gb: tä mukaan
 ;;;;;;
+
+
+(println (map find-note-name (chord-degree :i :c2 :major 8)))
+
+(println (map find-note-name (chord :c2 :7sus2)))
+
 
 (trg :gb2 vintage-bass)
 
@@ -589,37 +608,41 @@
 
 (trg :gb2
      vintage-bass
-     :in-trg (map-in [(rep 8 1)] scl 0.1)
-     ;(map-in [1 [1 1 1 1] r [1 r r [1 1 1 r]]] scl 0.1)
-     ;(map-in [1 [1 r 1 [1 1]] 1 [[1 1 1 1] r r 1]] scl 0.1)
-     ;(map-in [r 1 r [(rep 16 1)]] scl 0.1)
-     ;(map-in [(rep 16 1)] scl 0.1)
-                                        ;[(rep 32 1) r 1 (rep 8 1)]
-     ; [1 [(rep 16 1)] r [1 1 1 1]]
-    ;[(evr 4 1 (partition 1 (sfl (fll 16 [[1] [1] [r]]))))]
+     :in-trg
+(seq (map-in
+      (->>  [(rep 8 [1 1])]
+            (rep 8)
+            (rpl 2  [(rep 4 [(rep 4 1)])])
+            (rpl 3  [[1 1] r [1 1]  r [1 1 1 1] 1 1 1])
+            (rpl 4  [[1 1] r [1 1] r])
+            (rpl 5  [1 1 1 [(rep 8 1)]])
+            (rpl 8  [ (acc [(rep 16 1)]) 1 r [1 1] [1 1 1 r] [1 1 1 1] [1 1 1 1] [1 1]])
+            )
+      scl 0.05))
+
      :in-gate-select  [0]
-     :in-amp [2.013]
-     :in-note [ "fc1" "fg1" (rep 2 ["f f1" "fbb1"])]
-    [(rep 2 ["fc1" "fbb0"]) "fg1 " "fbb1"]
-     ;["fg1"]
-     ;["f f1"]
-     ;["f f0"]
-                                        ;
-     ;["fbb1"]
-     ;(rep 1 [(rep 16 "ng2")])
-     ;(rep 1 [(rep 16 "nbb2")])
-     ;(rep 1 [(rep 16 "nf3")])
-     :in-a [0.00125]
+     :in-amp [1]
+     :in-note (->> ["nc2"]
+                   (rep 8)
+                   (evr 3 [ "nc2" "ng2" (rep 2 ["nf2" "nb2"])])
+                   (rpl 5 (fll 8 ["nd2" "ne3" "na2"]))
+                   )
+     :in-a [0.0125]
      :in-d [0.3]
-     :in-s (acc [(range 0.5 2 0.1)])       ;[1.015]
+     :in-s [2.5]; (acc [(range 0.5 2 0.1)]) ;[1.015]
      :in-r [0.275]; (slw 32 [(range 0.1 1 0.01)])
 )
+
 
 (pause! :gb2)
 
 (play! :gb2)
 
-(volume! :gb2 0.5)
+(volume! :gb2 1)
+
+(stp :gb2)
+
+
 
 ;;;;; setti2
 ;;;;Kick kurinaa sekaan
