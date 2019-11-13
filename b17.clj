@@ -592,9 +592,9 @@
 (sta)
 
 
-;;;;;;;
-;;gb: tä mukaan
-;;;;;;
+;;;;;;;;;;;;;;;;
+;;:gb:tä mukaan;
+;;;;;;;;;;;;;;;;
 
 
 (println (map find-note-name (chord-degree :i :c2 :major 8)))
@@ -610,15 +610,16 @@
      vintage-bass
      :in-trg
 (seq (map-in
-      (->>  [(rep 8 [1 1])]
+      (->>  [(rep 4 [1 1])]
             (rep 8)
-            (rpl 2  [(rep 4 [(rep 4 1)])])
+            (evr 2 [1 [r r 1 1] 1 [1 1] ])
+            ;(rpl 2  [(rep 4 [(rep 4 1)])])
             (rpl 3  [[1 1] r [1 1]  r [1 1 1 1] 1 1 1])
             (rpl 4  [[1 1] r [1 1] r])
             (rpl 5  [1 1 1 [(rep 8 1)]])
-            (rpl 8  [ (acc [(rep 16 1)]) 1 r [1 1] [1 1 1 r] [1 1 1 1] [1 1 1 1] [1 1]])
+            (rpl 7  [ (acc [(rep 16 1)]) 1 r [1 1] [1 1 1 r] [1 1 1 1] [1 1 1 1] [1 1]])
             )
-      scl 0.05))
+      scl 0.075))
 
      :in-gate-select  [0]
      :in-amp [1]
@@ -628,9 +629,17 @@
                    (rpl 5 (fll 8 ["nd2" "ne3" "na2"]))
                    )
      :in-a [0.0125]
-     :in-d [0.3]
-     :in-s [2.5]; (acc [(range 0.5 2 0.1)]) ;[1.015]
-     :in-r [0.275]; (slw 32 [(range 0.1 1 0.01)])
+     :in-d [0.03]
+     :in-s
+     (->> [12.5]
+          (rep 8)
+          ;(rpl 7  (acc [(range 10 30 1)]))
+          )
+     :in-r
+     (->> [0.275]
+          (rep 8)
+          ;(evr 2 [(range 0.1 1 0.01)])
+          )
 )
 
 
@@ -638,7 +647,7 @@
 
 (play! :gb2)
 
-(volume! :gb2 1)
+(volume! :gb2 0.1)
 
 (stp :gb2)
 
