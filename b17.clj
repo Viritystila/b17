@@ -556,12 +556,12 @@
 
 (trg :uhsmp smp
      :in-trg
-     (->>  (slw 16 (fll 16 ["bks1" "bks2" "bks3" "bks4"]))
-           (evr 5 [(rep 32 "buh")])
-           (evr 3 [r])
-           (evr 4 acc)
-           (rpl 6 [(rep 16 "bahh")])
-           (evr 8 (fn [x] (fst 16 x)))
+     (->>  (slw 16 (fll 16 ["bks1" r "bks2" r "bks3" "bks4" r]) )
+           ;(evr 5 [(rep 32 "buh")])
+           ;(evr 3 [r])
+           ;(evr 4 acc)
+           ;(rpl 6 [(rep 16 "bahh")])
+           (evr 8 (fn [x] (fst 32 x)))
            )
      :in-loop
      (->> (rep 32 [0])
@@ -573,7 +573,8 @@
           (evr 5 [(range 0 1600 10)]))
      :in-step ;(evr 5 (fst 4 [(range -0.5 2.5 0.25) 2 2 1]) (rep 32 [2]))
      (->> (rep 32 [2])
-          (evr 5 (fst 4 [(range -2.5 2.5 0.25) 2 2 1])))
+          ;(evr 5 (fst 4 [(range -2.5 2.5 0.25) 2 2 1]))
+          )
      )
 
 (trg! :uhsmp :uhsmpe trg-fx-echo
@@ -610,14 +611,15 @@
      vintage-bass
      :in-trg
 (seq (map-in
-      (->>  [(rep 4 [1 1])]
+      (->>  [1 r [1 1 r r] 1]
             (rep 8)
-            (evr 2 [1 [r r 1 1] 1 [1 1] ])
+            ;(evr (+ 1 (rand-int 7)) [(rep 32 1)])
+            ;(evr 2 [1 [r r 1 1] 1 [1 1] ])
             ;(rpl 2  [(rep 4 [(rep 4 1)])])
-            (rpl 3  [[1 1] r [1 1]  r [1 1 1 1] 1 1 1])
-            (rpl 4  [[1 1] r [1 1] r])
-            (rpl 5  [1 1 1 [(rep 8 1)]])
-            (rpl 7  [ (acc [(rep 16 1)]) 1 r [1 1] [1 1 1 r] [1 1 1 1] [1 1 1 1] [1 1]])
+            ;(rpl 3  [[1 1] r [1 1]  r [1 1 1 1] 1 1 1])
+            ;(rpl 4  [[1 1] 1 [1 1] r [1 1 r r] 1 [ r r 1 1] 1])
+            ;(rpl 5  [1 1 1 [(rep 8 1)]])
+            ;(rpl 7  [ (acc [(rep 16 1)]) 1 r [1 1] [1 1 1 r] [1 1 1 1] [1 1 1 1] [1 1]])
             )
       scl 0.075))
 
@@ -625,11 +627,14 @@
      :in-amp [1]
      :in-note (->> ["nc2"]
                    (rep 8)
-                   (evr 3 [ "nc2" "ng2" (rep 2 ["nf2" "nb2"])])
-                   (rpl 5 (fll 8 ["nd2" "ne3" "na2"]))
+                   (evr 3 [ "nc2" "nd2" (rep 2 ["ng2" "nbb2"])])
+                   (rpl 5 (fll 8 ["ng2" "nc3" "nbb2"]))
                    )
      :in-a [0.0125]
-     :in-d [0.03]
+     :in-d (->> [0.3]
+                (rep 8)
+                ;(evr 2 [(range 0.2 1 0.1)])
+                )
      :in-s
      (->> [12.5]
           (rep 8)
@@ -640,12 +645,17 @@
           (rep 8)
           ;(evr 2 [(range 0.1 1 0.01)])
           )
-)
-
+     )
 
 (pause! :gb2)
 
 (play! :gb2)
+
+(trg! :gb2 :gbw2 trg-fx-echo
+      :in-amp [1]
+      :in-decay-time [(/ 0.5625 1)]
+      :in-delay-time [(/ 0.5625 5)])
+
 
 (volume! :gb2 0.1)
 
@@ -658,29 +668,20 @@
 ;;; uheat pois
 
 
-(trg :kick kick)
+(trg :kick kick :in-amp [1])
 
 (pause! :kick)
 
-(trg :kick kick :in-trg   ; (rep 7 [(rep 16 1 )])
-     ;[1 r 1 [1 1] 1 r 1 1 1 1 (acc [(rep 8 1)]) 1 1 1 1 [1 1 1 1]]
-     ;[1 r r [(rep 16 1)]]
-     ;[1 [(rep 8 1)] 1  r]
-     ;[1 [1 1 1 1] [(rep 16 1)] r ]
-     ;(rep 2 [(rep 8 1)])
-     ;[1 1 1 r 1 1 1 [1 1 1 1]]
-
-     (fst 4 [[1 2] r [3 4] r [5 6] r [7 8] 9])
-     (fst 4 [[2 r 3 4] r [5 6 r 7] 1 [8 9 1 2 ] r [2 3] 4])
-       (acc [(rep 64 1)])
-       :in-f3  [ "fc1" "fg1" "f f1" "fbb1"]
-        [ "fg1" "fc1" "f bb1" "ff1"]
+(trg :kick kick :in-trg
+     (->>  [[1 2] r [3 4] r [5 6] r [7 8] 9]
+           (rep 8)
+           (evr 2  [[2 r 3 4] r [5 6 r 7] 1 [8 9 1 2 ] r [2 3] 4] )
+           (evr 1 (fn [x] (fst 4 x))))
+     :in-f3 (->> [ "fc1" "fg1" "f f1" "fbb1"]
+                 (rep 8)
+                 (evr 2  [ "fg1" "fc1" "f bb1" "ff1"]))
         :in-f2 [100]
      :in-f1 (fll 32 [100 100])
-     ;[ "fc2" "fg2" "ff2" "fbb2"]
-     ;; [[ "fc3" "fg3" "ff3" "fbb3"]
-     ;;  [ "fc3" "fg3" "ff3" "fbb3"]
-     ;;  [ "fc4" "fg3" "ff2" "fbb1"]]
      :in-amp [0.25])
 
 (volume! :kick 0.25)
@@ -690,14 +691,19 @@
 (pause! :kick)
 
 (stp :kick)
-
+;;
 (trg :nh hat2)
 
 (pause! :nh)
 
 (trg :nh hat2
-     :in-trg (rep 7 (fll 16 [0 2]))
-     (fst 4 [[1 0] r [1 0] r [1 0] r [1 0] 1])
+     :in-trg
+     (->> (rep 8 (fll 16 [0 2]))
+          (evr 2 [[1 0] r [1 0] r [1 0] r [1 0] 1])
+          (evr 2  (fn [x] (fst 4 x)))
+          (evr 4 [(rep 32 1)])
+          (evr 8 acc)
+          (evr 8 (fn [x] (fst 4 x))))
      ;(acc [(rep 64 1)])
      :in-attack [0.01 0.0001]
      :in-amp [1])
@@ -712,14 +718,12 @@
 
 ;;;;Setti3-4
 ;;;Setti3;;;;;
+(do
+  (add-tts-sample "k1"  "generalx2paradisedaqx2.txt" 200)
 
-(add-tts-sample "k1"  "generalx2paradisedaqx2.txt" 200)
+  (add-tts-sample "k2"  "generalx2paradisedaqx2.txt" 200)
 
-
-(add-tts-sample "k2"  "generalx2paradisedaqx2.txt" 200)
-
-
-(add-tts-sample "k3"  "generalx2paradisedaqx2.txt" 200)
+  (add-tts-sample "k3"  "generalx2paradisedaqx2.txt" 200))
 
 
 (trg :ksmp smp)
@@ -727,20 +731,48 @@
 (pause! :ksmp)
 
 (trg :ksmp smp
-     :in-trg [(rep 128 1)][1 1 1 1 1 1 1 [(rep 64 1)]] (rep 6 [r])
+     :in-trg (->> [r]
+                  (rep 16)
+                  (evr 4 [1 1 1 1 1 1 1 [(rep 64 1)]])
+                  (evr 8 [(rep 32 1)]))
      :in-buf ["b k2"]
      :in-step [2] ;(slw 1 [(sir 32 2.5 1 32)]) ;[2]
      :in-loop [1]
-     :in-start-pos  [(range 0 404040 5000)]
+     :in-start-pos  (->> [1]
+                         (rep 8)
+                         (evr 2 [(range 0 40000 5000)])
+                         )
      :in-amp [1.0])
 
 (pause! :ksmp)
 
 (play! :ksmp)
 
+(trg :hz haziti-clap)
+
+(pause! :hz)
+
+(trg :hz haziti-clap
+     :in-trg (->> (fll 16 [0 2])
+                  (rep 8)
+                  (evr 4  [[1 0] r [1 0] r [1 0] r [1 0] 1])
+                  (evr 4 fst))
+     :in-amp [0.5]
+     :in-rq (->> [0.01]
+                 (rep 32)
+                 ;(evr 2 (fst 8 [1 1 1 [(range 1 6.8 0.2)]]))
+                 )
+     )
+
+(play! :hz)
+
+(pause! :hz)
 ;;;;;
 ;;;;;
 ;;Setti5;;;
+
+
+(println (map find-note-name (chord :c2 :7sus2)))
 
 
 (do
@@ -751,11 +783,12 @@
 (trg :tb303sn
      tb303
      :in-trg
-     (slw ["n c3" ["n c3" "n d3"]])
-     (slw ["n e3" ["n c2"  "n c3"]])
-     (slw 2 [["n e2" "n e3" r r] [r "n d3" "n e3" "n d2"]])
-     (slw ["n d3" ["nd3" "nb2" "nf2" "ne3"]])
-
+     (->>  ["n c3" ["n c3" "n d3"]]
+           (rep 16)
+           (evr 2  ["n e3" ["n c2"  "n c3"]])
+           (evr 3  [["n e2" "n e3" r r] [r "n d3" "n e3" "n d2"]])
+           (evr 4  ["n d3" ["nd3" "nb2" "nf2" "ne3"]])
+           (evr 1 slw))
      :in-amp [1]
      :in-note  ":in-trg"
      :in-gate-select [1]
@@ -765,9 +798,8 @@
      :in-release [5.73]
      :in-r [0.9]
      :in-cutoff [500]
-     :in-wave  ;(rep 4 [0])
-     (rep 4 [0]) ;(rep 2 [2])
-     ;(rep 4 (fll 512 [0 1 2]))
+     :in-wave
+     (rep 4 [0])
      )
 
 (pause! :tb303sn)
@@ -790,16 +822,37 @@
 
  (sfl (evr 16 [[(rep 8 1)] 1 1 [1 1 1 1]] (evr 8 (fll 16 [1 r]) (rep 16 [(rep 8 1)]))))
 
-     :in-step [2]; (evr 8 (fll 4 [2 -1.75 -1.75 -2]) (rep 16 [2]))
+     :in-step [2]
      :in-loop [0]
      :in-start-pos [0]
  :in-buf (fll 16 (sfl ["b bass23" r r "b sn1" r "b bass23" r   "b sn0"]))
   (fll 16 (sfl ["b bass23" r r "b sn1" r "b bass23" r   "b sn0"]))
  (fll 16 (sfl ["b bass23" r r "b sn1" r "b sn2" r   "b bd0"]))
   (fll 8 (sfl ["b bd1" r r "b sn1" r "b bass23" r   "b sn0"]))
-                                        ;(evr 3 ["b bass20"] (rep 16 [ "b bd1" ])) ; (fll 8 [ "b bd1"  "b bass23"]) ;[ "b bd1" ])
+
 )
 
+
+
+( trg :bassd smp
+ :in-trg
+ (->>  ["b bd1"  "b sn1" [r r "b bd1" r] [ "b sn2" r "b bd1" r]]
+       (rep 16)
+       (evr 4  ["b bd0"  "b sn2" [ "b bass23" r "b bd1" r] [ [(rep 4 "b sn1")] r "b bd1" r]])
+       (evr 8  ["b bd1"   [(rep 8 "b sn2")] [ "b bd2" r "b bd1" r] [ "b sn1" r "b bd1" r]])
+       (evr 5  (sfl (fll 16 ["b bass20" r  "b sn1" r   "b bass23"   "b sn0"])))
+       (evr 15 [(acc [r r "b bd1" "bsn1"]) (dcl [(rep 16 "b bd2") r]) [(rep 4 "b bd2") (rep 16 1)] ])
+       ;(evr 1 acc)
+       ;(evr 2 dcl)
+       )
+
+     :in-step [2]
+     :in-loop [0]
+     :in-start-pos [0]
+ :in-buf ":in-trg"
+)
+
+(volume! :bassd 2)
 
 (play! :bassd)
 
