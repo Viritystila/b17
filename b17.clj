@@ -815,33 +815,18 @@
 
 (pause! :bassd)
 
-( trg :bassd smp
-      :in-trg
- (evr 16 [[(rep 8 1)] 1 1 [1 1 1 1]] (evr 8 [(rep 16 1)] (rep 16 [(rep 8 1)])))
-
-
- (sfl (evr 16 [[(rep 8 1)] 1 1 [1 1 1 1]] (evr 8 (fll 16 [1 r]) (rep 16 [(rep 8 1)]))))
-
-     :in-step [2]
-     :in-loop [0]
-     :in-start-pos [0]
- :in-buf (fll 16 (sfl ["b bass23" r r "b sn1" r "b bass23" r   "b sn0"]))
-  (fll 16 (sfl ["b bass23" r r "b sn1" r "b bass23" r   "b sn0"]))
- (fll 16 (sfl ["b bass23" r r "b sn1" r "b sn2" r   "b bd0"]))
-  (fll 8 (sfl ["b bd1" r r "b sn1" r "b bass23" r   "b sn0"]))
-
-)
-
-
 
 ( trg :bassd smp
  :in-trg
  (->>  ["b bd1"  "b sn1" [r r "b bd1" r] [ "b sn2" r "b bd1" r]]
        (rep 16)
-       (evr 4  ["b bd0"  "b sn2" [ "b bass23" r "b bd1" r] [ [(rep 4 "b sn1")] r "b bd1" r]])
-       (evr 8  ["b bd1"   [(rep 8 "b sn2")] [ "b bd2" r "b bd1" r] [ "b sn1" r "b bd1" r]])
-       (evr 5  (sfl (fll 16 ["b bass20" r  "b sn1" r   "b bass23"   "b sn0"])))
-       (evr 15 [(acc [r r "b bd1" "bsn1"]) (dcl [(rep 16 "b bd2") r]) [(rep 4 "b bd2") (rep 16 1)] ])
+       (evr 6 [[(rep 2 "b bd1")]  [(rep 4 "b sn1")] [r r "b bd1" r] [ "b sn2" r "b bd1" r]])
+       (evr 3 ["b bd1"  ["b bd0" "b sn1"] [(rep 4 "b bd1") ] [ [(rep 2 "b sn2")] r "b bd1" r]])
+       ;(evr 4  ["b bd0"  "b sn2" [ "b bass23" r "b bd1" r] [ [(rep 4 "b sn1")] r "b bd1" r]])
+       ;(evr 8  ["b bd1"   [(rep 8 "b sn2")] [ "b bd2" r "b bd1" r] [ "b sn1" r "b bd1" r]])
+       ;(evr 5  (sfl (fll 16 ["b bass20" r  "b sn1" r   "b bass23"   "b sn0"])))
+       ;(evr 15 [(acc [r r "b bd1" "bsn1"]) (dcl [(rep 16 "b bd2") r]) [(rep 4 "b bd2") (rep 16 1)] ])
+       (rpl 11 [[(rep 4 "b bd1")]  "b sn1" [[(rep 1 "b bass20")] "b sn0" "b bd1" r] [ "b sn2" r "b bd1" "b bass23"]])
        ;(evr 1 acc)
        ;(evr 2 dcl)
        )
@@ -862,7 +847,57 @@
 
 (stp :bassd)
 
-(sta)
+
+
+(trg :ks1 ks1)
+
+(pause! :ks1)
+
+(trg :ks1
+     ks1
+     :in-trg
+     (->>   (fst 8 ["nc2" "nc1" "nc1" "nb1"])
+            (rep 8)
+            (evr 2  (fst 16 ["nc2" "nc1" "nc0" "ne2"]))
+            (evr 3  (fst 16 ["nc2" "nd1" "nc0" "nd2"] ))
+            (evr 4  (fst 8 ["nc2" "nd1" "nc0" "nd2" "nc3" "nd2" "nc1" "nd3"]) )
+            (rpl 4 (fst 16 ["nc3" "nc1" "nc1" "nb1"]))
+            (rpl 5 (fst 16 ["nc2" "nc2" "nc0" "ne2"]))
+            (rpl 6  (fst 16 ["nc3" "nd1" "nc1" "nd2"] ))
+            (rpl 7      (fst 8 ["nc4" "nd4" "nc3" "nd3" "nc2" "nd2" "nc1" "nd1"])))
+
+     ;(fst 16 ["nc2" "nc1" "nc1" "nb1"])
+     ;(fst 16 ["nc2" "nc1" "nc0" "ne2"])
+     ;(fst 16 ["nc2" "nd1" "nc0" "nd2"] )
+     ;(fst 8 ["nc2" "nd1" "nc0" "nd2" "nc3" "nd2" "nc1" "nd3"])
+
+     ;(fst 16 ["nc3" "nc1" "nc1" "nb1"])
+     ;(fst 16 ["nc2" "nc2" "nc0" "ne2"])
+     ;(fst 16 ["nc3" "nd1" "nc1" "nd2"] )
+     ;(fst 8 ["nc4" "nd4" "nc3" "nd3" "nc2" "nd2" "nc1" "nd1"])
+     :in-dur [10.5]
+     :in-amp [1]
+     :in-note ":in-trg"
+     :in-decay [0.5]
+     :in-coef [0.5]
+     )
+
+(play! :ks1)
+
+(volume! :ks1 1)
+
+(trg! :ks1 :ks1f trg-fx-feedback
+      :in-delay-time [0.0125]
+      :in-decay-time [0.5])
+
+(stp :ks1f)
+
+(pause! :ks1)
+
+(play! :ks1f)
+
+(stp :ks1)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
