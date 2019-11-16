@@ -509,46 +509,46 @@
 ;Alkaa UHEA:lla
 ;;;;
 
-(do
-  (add-sample "uh" (string-to-buffer "UHHHHHHHHAAAAAAAAAAAA"))
 
-  (add-sample "ee" (string-to-buffer "EEEE"))
+(add-sample "uh" (string-to-buffer "UHHHHHHHHAAAAAAAAAAAA"))
 
-  (add-sample "aa" (string-to-buffer "AAAAAAAAAA"))
+(add-sample "ee" (string-to-buffer "EEEE"))
 
-  (add-sample "oo" (string-to-buffer "OOOOOOOOOO"))
+(add-sample "aa" (string-to-buffer "AAAAAAAAAA"))
 
-  (add-sample "uhea" (string-to-buffer "UHHHHHHHHEEEEEEEAAAAAAA"))
+(add-sample "oo" (string-to-buffer "OOOOOOOOOO"))
 
-  (add-sample "hah" (string-to-buffer "hah"))
+(add-sample "uhea" (string-to-buffer "UHHHHHHHHEEEEEEEAAAAAAA"))
 
-  (add-sample "bah" (string-to-buffer "bah"))
+(add-sample "hah" (string-to-buffer "hah"))
 
-  (add-sample "beer" (string-to-buffer "beer"))
+(add-sample "bah" (string-to-buffer "bah"))
 
-  (add-sample "fear" (string-to-buffer "fear"))
+(add-sample "beer" (string-to-buffer "beer"))
 
-  (add-sample "ahh" (string-to-buffer "AHHHHH!"))
+(add-sample "fear" (string-to-buffer "fear"))
 
-  (add-tts-sample "ks1"  "generalx2paradisedaqx2.txt" 5)
+(add-sample "ahh" (string-to-buffer "AHHHHH!"))
 
-  (add-tts-sample "ks2"  "generalx2paradisedaqx2.txt" 5)
+(add-tts-sample "ks1"  "generalx2paradisedaqx2.txt" 5)
 
-  (add-tts-sample "ks3"  "generalx2paradisedaqx2.txt" 5)
+(add-tts-sample "ks2"  "generalx2paradisedaqx2.txt" 5)
 
-  (add-tts-sample "ks4"  "generalx2paradisedaqx2.txt" 5)
+(add-tts-sample "ks3"  "generalx2paradisedaqx2.txt" 5)
 
-  (add-tts-sample "ks5"  "generalx2paradisedaqx2.txt" 5)
+(add-tts-sample "ks4"  "generalx2paradisedaqx2.txt" 5)
 
-  (add-tts-sample "ks6"  "generalx2paradisedaqx2.txt" 5)
+(add-tts-sample "ks5"  "generalx2paradisedaqx2.txt" 5)
 
-  (add-tts-sample "ks7"  "generalx2paradisedaqx2.txt" 5)
+(add-tts-sample "ks6"  "generalx2paradisedaqx2.txt" 5)
 
-  (add-tts-sample "ks8"  "generalx2paradisedaqx2.txt" 5)
+(add-tts-sample "ks7"  "generalx2paradisedaqx2.txt" 5)
 
-  (add-tts-sample "ks9"  "generalx2paradisedaqx2.txt" 5)
+(add-tts-sample "ks8"  "generalx2paradisedaqx2.txt" 5)
 
-  )
+(add-tts-sample "ks9"  "generalx2paradisedaqx2.txt" 5)
+
+
 
 (trg :uhsmp smp)
 
@@ -627,8 +627,8 @@
      :in-amp [1]
      :in-note (->> ["nc2"]
                    (rep 8)
-                   (evr 3 [ "nc2" "nd2" (rep 2 ["ng2" "nbb2"])])
-                   (rpl 5 (fll 8 ["ng2" "nc3" "nbb2"]))
+                   ;(evr 3 [ "nc2" "nd2" (rep 2 ["ng2" "nbb2"])])
+                   ;(rpl 5 (fll 8 ["ng2" "nc3" "nbb2"]))
                    )
      :in-a [0.0125]
      :in-d (->> [0.3]
@@ -667,6 +667,7 @@
 ;;;;Kick kurinaa sekaan
 ;;; uheat pois
 
+(pause! :uhsmp)
 
 (trg :kick kick :in-amp [1])
 
@@ -699,11 +700,12 @@
 (trg :nh hat2
      :in-trg
      (->> (rep 8 (fll 16 [0 2]))
-          (evr 2 [[1 0] r [1 0] r [1 0] r [1 0] 1])
-          (evr 2  (fn [x] (fst 4 x)))
-          (evr 4 [(rep 32 1)])
-          (evr 8 acc)
-          (evr 8 (fn [x] (fst 4 x))))
+          ;(evr 2 [[1 0] r [1 0] r [1 0] r [1 0] 1])
+          ;(evr 2  (fn [x] (fst 4 x)))
+          ;(evr 4 [(rep 32 1)])
+          ;(evr 8 acc)
+          ;(evr 8 (fn [x] (fst 4 x)))
+          )
      ;(acc [(rep 64 1)])
      :in-attack [0.01 0.0001]
      :in-amp [1])
@@ -718,12 +720,20 @@
 
 ;;;;Setti3-4
 ;;;Setti3;;;;;
+(pause! :gb2)
+
+(pause! :nh)
+
+(lss)
+
 (do
   (add-tts-sample "k1"  "generalx2paradisedaqx2.txt" 200)
 
   (add-tts-sample "k2"  "generalx2paradisedaqx2.txt" 200)
 
-  (add-tts-sample "k3"  "generalx2paradisedaqx2.txt" 200))
+  (add-tts-sample "k3"  "generalx2paradisedaqx2.txt" 200)
+
+  )
 
 
 (trg :ksmp smp)
@@ -748,6 +758,8 @@
 
 (play! :ksmp)
 
+(volume! :ksmp 0.5)
+
 (trg :hz haziti-clap)
 
 (pause! :hz)
@@ -755,9 +767,10 @@
 (trg :hz haziti-clap
      :in-trg (->> (fll 16 [0 2])
                   (rep 8)
-                  (evr 4  [[1 0] r [1 0] r [1 0] r [1 0] 1])
-                  (evr 4 fst))
-     :in-amp [0.5]
+                  ;(evr 4  [[1 0] r [1 0] r [1 0] r [1 0] 1])
+                  ;(evr 4 fst)
+                  )
+     :in-amp [0.15]
      :in-rq (->> [0.01]
                  (rep 32)
                  ;(evr 2 (fst 8 [1 1 1 [(range 1 6.8 0.2)]]))
@@ -767,6 +780,9 @@
 (play! :hz)
 
 (pause! :hz)
+
+(stp :hz)
+
 ;;;;;
 ;;;;;
 ;;Setti5;;;
@@ -806,6 +822,8 @@
 
 (play! :tb303sn)
 
+
+
 ;;;;;;;;;
 ;;Setti 6
 ;;;;;;;;;
@@ -820,13 +838,13 @@
  :in-trg
  (->>  ["b bd1"  "b sn1" [r r "b bd1" r] [ "b sn2" r "b bd1" r]]
        (rep 16)
-       (evr 6 [[(rep 2 "b bd1")]  [(rep 4 "b sn1")] [r r "b bd1" r] [ "b sn2" r "b bd1" r]])
+       (evr 2 [[(rep 2 "b bd1")]  [(rep 4 "b sn1")] [r r "b bd1" r] [ "b sn2" r "b bd1" r]])
        (evr 3 ["b bd1"  ["b bd0" "b sn1"] [(rep 4 "b bd1") ] [ [(rep 2 "b sn2")] r "b bd1" r]])
-       ;(evr 4  ["b bd0"  "b sn2" [ "b bass23" r "b bd1" r] [ [(rep 4 "b sn1")] r "b bd1" r]])
-       ;(evr 8  ["b bd1"   [(rep 8 "b sn2")] [ "b bd2" r "b bd1" r] [ "b sn1" r "b bd1" r]])
-       ;(evr 5  (sfl (fll 16 ["b bass20" r  "b sn1" r   "b bass23"   "b sn0"])))
+       (evr 4  ["b bd0"  "b sn2" [ "b bass23" r "b bd1" r] [ [(rep 4 "b sn1")] r "b bd1" r]])
+       (evr 8  ["b bd1"   [(rep 8 "b sn2")] [ "b bd2" r "b bd1" r] [ "b sn1" r "b bd1" r]])
+       (evr 5  (sfl (fll 16 ["b bass20" r  "b sn1" r   "b bass23"   "b sn0"])))
        ;(evr 15 [(acc [r r "b bd1" "bsn1"]) (dcl [(rep 16 "b bd2") r]) [(rep 4 "b bd2") (rep 16 1)] ])
-       (rpl 11 [[(rep 4 "b bd1")]  "b sn1" [[(rep 1 "b bass20")] "b sn0" "b bd1" r] [ "b sn2" r "b bd1" "b bass23"]])
+       ;(rpl 11 [[(rep 4 "b bd1")]  "b sn1" [[(rep 1 "b bass20")] "b sn0" "b bd1" r] [ "b sn2" r "b bd1" "b bass23"]])
        ;(evr 1 acc)
        ;(evr 2 dcl)
        )
@@ -843,10 +861,9 @@
 
 (pause! :bassd)
 
-(trg! :bassd :bassde trg-fx-echo :in-decay-time [(/ (/ 1 0.5626)  2)]  :in-delay-time  [(/ (/ 1 0.5626)  50)] :in-amp (evr 16 [0.125 0.5 0.75 1 0.75 0.5 1 0.125] (rep 16 [0.125])))
+(trg! :bassd :bassde trg-fx-echo :in-decay-time [(/ (/ 1 0.5626)  2)]  :in-delay-time  [(/ (/ 1 0.5626)  50)] :in-amp (evr 16 [0.125 0.5 0.75 1 0.75 0.5 1 0.125] (rep 16 [0.1])))
 
 (stp :bassd)
-
 
 
 (trg :ks1 ks1)
@@ -892,6 +909,7 @@
 
 (stp :ks1f)
 
+
 (pause! :ks1)
 
 (play! :ks1f)
@@ -902,6 +920,16 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(trg :tick ping)
+
+(pause! :tick)
+
+(trg :tick ping :in-amp [0] :in-trg [(rep 60 1)])
+
+(play! :tick)
+
+(stp :tick)
+
 
 
 
@@ -909,7 +937,7 @@
 ;(put-text-property 1 200 'face (cons 'foreground-color "red"))
 
 
-(t/start "./b17.glsl" :width 1920 :height 1080 :cams [1] :videos ["../videos/jkl_fixed.mp4" "../videos/onnenp.mp4" "../videos/tietoisku_1_fixed.mp4" "../videos/spede_fixed.mp4" "../videos/sormileikit.mp4"])
+(t/start "./b17.glsl" :width 1920 :height 1080 :cams [0 1] :videos ["../videos/jkl_fixed.mp4" "../videos/onnenp.mp4" "../videos/tietoisku_1_fixed.mp4" "../videos/spede_fixed.mp4" "../videos/hapsiainen_fixed.mp4"])
 
 
 
@@ -921,7 +949,6 @@
                                         ;;;;;;;;;;;;;
 
 (t/post-start-cam 3)
-
 
 (t/set-cam-fps 3 1)
 
@@ -949,10 +976,6 @@
 
 (t/set-video-fixed 4 :fw)
 
-(t/post-start-video "../videos/onnenp.mp4" 1)
-
-(t/set-video-play 1)
-
 (t/bufferSection 1 0 11800)
 
 (t/set-video-fixed 1 :fw)
@@ -971,9 +994,9 @@
 
 (on-trigger (get-trigger-id :tick :in-trg)
             (fn [val]
-              (let [obv  @abm]
+              (let []
                                         ;(println @uhbm)
-                (t/set-dataArray-item 0 obv)
+                (t/set-dataArray-item 0 @abm)
                 (t/set-dataArray-item 7 @gbm)
                 (t/set-dataArray-item 8 @uhbm)))
             :smp_obv)
@@ -1005,7 +1028,7 @@
               )
             :gb2trg)
 
-(remove-event-handler :gbtrg)
+(remove-event-handler :gb2trg)
 
 
 (on-trigger (get-trigger-val-id :ks1 :in-trg) (fn [val]
@@ -1080,3 +1103,5 @@
 
 
 (t/stop)
+
+(sta)

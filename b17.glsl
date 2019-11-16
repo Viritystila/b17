@@ -50,7 +50,7 @@ vec4 glitch(vec2 uv_noise, vec2 uv,  vec4 v1In, vec4 v2In, float mod1, sampler2D
   vec4 glitchText=v1In;
 	// loose luma for some blocks
 	if (texture2D(tex1, uv_noise).g > block_thres)
-		glitchText.rgb = v2In.ggg;
+		glitchText.rgb = v2In.gbg;
 
         	// discolor block lines
 	if (texture2D(tex2, vec2(uv_noise.y, 0.0)).b * 2.5 <  line_thres)
@@ -234,10 +234,10 @@ void main(void){
   vec4 text= texture2D(iText, uv);
 
   c3.rgb=c3.bgr;
-  vec4 mask =vec4(0,1,0,0);
-  if (gl_FragCoord.x>1*2000){
-     c3=mask;
-   }
+  //vec4 mask =vec4(0,1,0,0);
+  //if (gl_FragCoord.x>1*2000){
+  //   c3=mask;
+  // }
 
   vec4 vm=mix(v3, v2, 0);
 
@@ -254,22 +254,23 @@ void main(void){
 
   //Alkuun
   //uheaa, setti1
-  vec4 o1=colorRemoval(c3, v0, 10*it8, 1, 0, 0, 0);
-
+  float fade_size=2;
+  float p1= mix(fade_size, 0.0-fade_size, uv.x-0.125);
+  vec4 o1=mix(c3, c0, smoothstep(1, 0, p1));
   //gb2 tulee mukaan
-  vec4 o2= colorRemoval(c3, v0d, 10*it8, 1, 0, 0, 0);
+  vec4 o2= colorRemoval(c3, v0d, 1, 1, 0, 0, 0);
 
   //uhea muuttuu, setti2
   o2=v0d;
   o1=v0;
-  vec4 o3 = mix (o1, o2, 11+it7);
+  vec4 o3 = mix (o1, o2, 11000+0.1);
   o3=colorRemoval(v2, o3, 1, 0.2, 0, 0, 0);
-  o3=mix(o3, o3, 10*it7);
+  o3=mix(o2, o3, 10);
   ///Uheat pois ja kick3 tilalle, setti3
 
   vec4 o4= mix(vmss, pfd, 0.0089*it6);
 
-  //nh tule mukaan, setti
+  //nh tule mukaan, setti 3
   o4= mix(vmss, pfd, 10);
 
   ///Spede tulee mukaan kovilla rummuilla, setti4
@@ -284,8 +285,8 @@ void main(void){
 
 
   ///setti 6
-  vec4 o7i=  glitch(uv_noise, uv,  v1, v1, 1, iVideo1, iVideo0);
-  vec4 o7= mix(v1, o7i, 0.07);
+  vec4 o7i=  glitch(uv_noise, dsUV,  v0n, v1, 1, iVideo1, iVideo0);
+  vec4 o7= mix(v1, o7i, it0);
 
   out_Color=o3; //o7;//o5; //o4;//o3;//o2; //o1 ;// mix(vmss, pfd, 0.89*it7*it7*10) ; //vt4;
 
