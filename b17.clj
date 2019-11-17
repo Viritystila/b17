@@ -557,20 +557,22 @@
 (trg :uhsmp smp
      :in-trg
      (->>  (slw 16 (fll 16 ["bks1" r "bks2" r "bks3" "bks4" r]) )
-           ;(evr 5 [(rep 32 "buh")])
+           (evr 5 [(rep 32 "buh")])
            ;(evr 3 [r])
            ;(evr 4 acc)
            ;(rpl 6 [(rep 16 "bahh")])
-           (evr 8 (fn [x] (fst 32 x)))
+           ;(evr 8 (fn [x] (fst 32 x)))
            )
      :in-loop
      (->> (rep 32 [0])
-          (evr 5  [1]))
+          ;(evr 5  [1])
+          )
      :in-buf ":in-trg"
      :in-amp [0.75]
      :in-start-pos
      (->> (rep 32 [0])
-          (evr 5 [(range 0 1600 10)]))
+          ;(evr 5 [(range 0 1600 10)])
+          )
      :in-step ;(evr 5 (fst 4 [(range -0.5 2.5 0.25) 2 2 1]) (rep 32 [2]))
      (->> (rep 32 [2])
           ;(evr 5 (fst 4 [(range -2.5 2.5 0.25) 2 2 1]))
@@ -669,7 +671,7 @@
 
 (pause! :uhsmp)
 
-(trg :kick kick :in-amp [1])
+(trg :kick kick)
 
 (pause! :kick)
 
@@ -745,7 +747,7 @@
                   (rep 16)
                   (evr 4 [1 1 1 1 1 1 1 [(rep 64 1)]])
                   (evr 8 [(rep 32 1)]))
-     :in-buf ["b k2"]
+     :in-buf ["b k1"]
      :in-step [2] ;(slw 1 [(sir 32 2.5 1 32)]) ;[2]
      :in-loop [1]
      :in-start-pos  (->> [1]
@@ -822,8 +824,6 @@
 
 (play! :tb303sn)
 
-
-
 ;;;;;;;;;
 ;;Setti 6
 ;;;;;;;;;
@@ -836,13 +836,15 @@
 
 ( trg :bassd smp
  :in-trg
- (->>  ["b bd1"  "b sn1" [r r "b bd1" r] [ "b sn2" r "b bd1" r]]
+ (->>  [[r (rep 3 "b bd1") ]  [ "b sn1"  "b bd4"] [r r "b bd1" r] [ "b sn2" r "b bd1" r]]
        (rep 16)
-       (evr 2 [[(rep 2 "b bd1")]  [(rep 4 "b sn1")] [r r "b bd1" r] [ "b sn2" r "b bd1" r]])
-       (evr 3 ["b bd1"  ["b bd0" "b sn1"] [(rep 4 "b bd1") ] [ [(rep 2 "b sn2")] r "b bd1" r]])
-       (evr 4  ["b bd0"  "b sn2" [ "b bass23" r "b bd1" r] [ [(rep 4 "b sn1")] r "b bd1" r]])
-       (evr 8  ["b bd1"   [(rep 8 "b sn2")] [ "b bd2" r "b bd1" r] [ "b sn1" r "b bd1" r]])
+       (evr 2  [["b bd1"]  [ "b sn1" "b bd3"] [r r (rep 1 "b bd1") r] [ "b sn2" r "b bd1" r]])
+       ;(evr 2 [[(rep 4 "b bd1")]  [(rep 4 "b sn1")] [r r  "b bass23" r] [ "b sn2" r "b bd1" r]])
+       ;(evr 3 ["b bd1"  ["b bd0" "b sn1"] [(rep 4 "b bd2") ] [ [(rep 2 "b sn2")] r "b bd1" r]])
+       (evr 4  ["b bd0"  "b sn2" [ "b bass23"  "b bass23" "b bd1" r] [ [(rep 4 "b sn1")] r "b bd1" r]])
+       ;(evr 8  ["b bd1"   (acc [(rep 8 "b sn2")]) [ "b bd2" r "b bd1" r] [ "b sn1" r "b bd1" r]])
        (evr 5  (sfl (fll 16 ["b bass20" r  "b sn1" r   "b bass23"   "b sn0"])))
+       (evr 8  (sfl (fll 16 [r "b bass15"  "b sn1" r   "b bass23"   "b sn0"])))
        ;(evr 15 [(acc [r r "b bd1" "bsn1"]) (dcl [(rep 16 "b bd2") r]) [(rep 4 "b bd2") (rep 16 1)] ])
        ;(rpl 11 [[(rep 4 "b bd1")]  "b sn1" [[(rep 1 "b bass20")] "b sn0" "b bd1" r] [ "b sn2" r "b bd1" "b bass23"]])
        ;(evr 1 acc)
@@ -916,6 +918,7 @@
 
 (stp :ks1)
 
+(sta)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
