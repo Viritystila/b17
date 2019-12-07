@@ -168,7 +168,7 @@ void main(void){
 
   vec2 uvi=uv;
   uv.y=1.0-uv.y;
-  vec2 dsUV=distortUV(uv, uv, iVideo1, 2*it7);
+  vec2 dsUV=distortUV(uv, uv, iVideo1, 2);
 
   vec4 t0 = texture2D(iChannel0,uv);
 
@@ -257,37 +257,38 @@ void main(void){
   float fade_size=2;
   float p1= mix(fade_size, 0.0-fade_size, uv.x-0.125);
   vec4 o1=mix(c3, c0, smoothstep(1, 0, p1));
+  vec4 o1b=colorRemoval(v4, o1, 1, 0.2, 0, 0, 0);
   //gb2 tulee mukaan
-  vec4 o2= colorRemoval(c3, v0d, 1, 1, 0, 0, 0);
+  vec4 o2= colorRemoval(c3, v0d, 1, 1, 0.6, 0.3, 0);
 
   //uhea muuttuu, setti2
   o2=v0d;
   o1=v0;
   vec4 o3 = mix (o1, o2, 11000+0.1);
   o3=colorRemoval(v2, o3, 1, 0.2, 0, 0, 0);
-  o3=mix(o2, o3, 10);
+  o3=mix(o2, o3, 10*it7);
   ///Uheat pois ja kick3 tilalle, setti3
 
-  vec4 o4= mix(vmss, pfd, 0.0089*it6);
+  vec4 o4= mix(vmss, pfd, 10);
 
   //nh tule mukaan, setti 3
-  o4= mix(vmss, pfd, 10);
+  o4= mix(vmss, pfd, 100);
 
   ///Spede tulee mukaan kovilla rummuilla, setti4
-  o4= mix(v0, pfd, 0.59);
+  o4= mix(v0, pfd, 1110.85);
   vec4 o5 = colorRemoval(v3, o4, 1,0.2,  0, 0, 0.6);
 
 
   ///// setti5
 
 
-  vec4 o6=colorRemoval(v0, v0kal, 0.6, 1 , 0, 0, 0);
+  vec4 o6=colorRemoval(v0, v0kal, 0.6*it0, 1 , 0, 0, 0);
 
 
   ///setti 6
   vec4 o7i=  glitch(uv_noise, dsUV,  v0n, v1, 1, iVideo1, iVideo0);
   vec4 o7= mix(v1, o7i, it0);
 
-  out_Color=o3; //o7;//o5; //o4;//o3;//o2; //o1 ;// mix(vmss, pfd, 0.89*it7*it7*10) ; //vt4;
+  out_Color=c3; //o7;//o5; //o4;//o3;//o2; //o1 ;// mix(vmss, pfd, 0.89*it7*it7*10) ; //vt4;
 
 }
